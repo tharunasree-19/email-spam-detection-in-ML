@@ -1,0 +1,23 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+df = pd.read_csv("/content/spam.csv")
+df.head()
+le = LabelEncoder()
+df["cat"]= le.fit_transform(df["Category"])
+final = df.drop(["Category"], axis="columns")
+x = df["Message"]
+y = df["cat"]
+x_train , x_test, y_train , y_test = train_test_split(x , y , test_size = 0.2 , random_state = 42)
+v = CountVectorizer()
+c = v.fit_transform(x_train.values)
+m = MultinomialNB()
+m.fit(c , y_train) 
+emails = [
+    'Hey mohan, can we get together to watch footbal game tomorrow?',
+    'Upto 20% discount on parking, exclusive offer just for you. Dont miss this reward!'
+]
+e = v.transform(emails) #Updated this line
+m.predict(e)
